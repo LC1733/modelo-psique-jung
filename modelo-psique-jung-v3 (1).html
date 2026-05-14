@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mysterium Animæ — Modelo de la Psique · C. G. Jung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1612;--parchment:#ebe0c8;--parchment-2:#d9cbac;
+    --gold:#b8893a;--gold-soft:#d4a857;
+    --rust:#8b3a1f;--shadow-br:#4a3826;
+    --violet:#4a3a6b;--azure:#2f4a6b;--moss:#5a6b3a;
+    --nigredo:#1a1612;--albedo:#e8dcc0;--rubedo:#8b3a1f;
+    --line:rgba(26,22,18,.35);--line-soft:rgba(26,22,18,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--parchment);color:var(--ink);font-family:'EB Garamond',serif;line-height:1.55}
+
+  body{
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(184,137,58,.10), transparent 55%),
+      radial-gradient(ellipse at 85% 80%, rgba(139,58,31,.08), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(26,22,18,.04), transparent 70%);
+    min-height:100vh;position:relative;overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.45'/></svg>");
+    mix-blend-mode:multiply;opacity:.55;
+  }
+  .frame{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:60px 40px 60px}
+
+  /* ───── Cabecera ───── */
+  header{text-align:center;border-bottom:1px solid var(--line);padding-bottom:32px;margin-bottom:48px;position:relative}
+  header::before{content:'❦';display:block;color:var(--gold);font-size:1.4rem;position:absolute;top:8px;left:50%;transform:translateX(-50%)}
+  .eyebrow{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.45em;color:var(--rust);text-transform:uppercase;margin-bottom:14px;margin-top:28px}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.05;font-style:italic;color:var(--ink)}
+  h1 .roman{font-style:normal;display:block;font-size:.45em;letter-spacing:.18em;color:var(--shadow-br);margin-top:12px;font-weight:400;font-family:'Cinzel',serif}
+  .subtitle{font-family:'EB Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--shadow-br);margin-top:18px;max-width:620px;margin-left:auto;margin-right:auto}
+
+  /* ───── Navegación de secciones ───── */
+  .toc{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:48px;padding:0 20px}
+  .toc a{
+    font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--shadow-br);text-decoration:none;
+    padding:8px 14px;border:1px solid var(--line-soft);
+    background:rgba(255,250,240,.3);transition:all .3s;
+  }
+  .toc a:hover{border-color:var(--gold);color:var(--rust);background:rgba(255,250,240,.7)}
+
+  /* ───── Encabezado de sección ───── */
+  .section-head{text-align:center;margin:80px 0 40px;position:relative}
+  .section-head::before,.section-head::after{
+    content:'';position:absolute;top:50%;width:60px;height:1px;background:var(--line);
+  }
+  .section-head::before{left:50%;margin-left:-180px}
+  .section-head::after{right:50%;margin-right:-180px}
+  .section-head .num{
+    font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.4em;color:var(--rust);margin-bottom:8px;
+  }
+  .section-head h2{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:clamp(1.8rem,3.5vw,2.6rem);color:var(--ink);
+  }
+  .section-head p{font-style:italic;color:var(--shadow-br);margin-top:8px;font-size:.95rem;max-width:560px;margin-left:auto;margin-right:auto}
+
+  /* ───── Grid principal ───── */
+  .layout{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:36px;align-items:start}
+  @media (max-width:980px){.layout{grid-template-columns:1fr;gap:24px}}
+
+  /* ───── Notas marginales ───── */
+  .note{font-family:'EB Garamond',serif;font-size:.92rem;color:var(--shadow-br);padding:18px 20px;border:1px solid var(--line-soft);background:rgba(255,250,240,.35);position:relative}
+  .note h3{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.28em;color:var(--rust);text-transform:uppercase;font-weight:500;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+  .note p{margin-bottom:10px}.note p:last-child{margin-bottom:0}
+  .note em{color:var(--ink);font-weight:500;font-style:italic}
+  .note .glyph{position:absolute;top:-14px;right:-14px;width:32px;height:32px;border-radius:50%;background:var(--parchment);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;color:var(--gold);font-size:1rem}
+  .col-left .note + .note, .col-right .note + .note{margin-top:20px}
+
+  /* ───── Mandala ───── */
+  .mandala-wrap{display:flex;flex-direction:column;align-items:center}
+  .mandala{width:100%;max-width:520px;aspect-ratio:1/1;filter:drop-shadow(0 2px 1px rgba(26,22,18,.08))}
+
+  .node-group{cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.3,1.2)}
+  .node-group:hover, .node-group.active{transform:scale(1.08);transform-box:fill-box;transform-origin:center}
+  .node-group .node-circle{transition:fill .3s,stroke-width .3s,filter .3s}
+  .node-group:hover .node-circle, .node-group.active .node-circle{stroke-width:2.5;filter:drop-shadow(0 0 6px rgba(184,137,58,.5))}
+  .node-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;fill:var(--ink);text-anchor:middle;text-transform:uppercase;pointer-events:none}
+  .ring-label{font-family:'EB Garamond',serif;font-style:italic;fill:var(--shadow-br);font-size:12px;letter-spacing:.12em}
+  .ring-stroke{fill:none;stroke:var(--ink);stroke-width:1}
+  .ring-stroke-soft{fill:none;stroke:var(--line);stroke-width:.8;stroke-dasharray:2 4}
+
+  @keyframes drawPath{from{stroke-dashoffset:1400}to{stroke-dashoffset:0}}
+  .path-individuation{fill:none;stroke:var(--rust);stroke-width:1.6;stroke-dasharray:1400;stroke-dashoffset:1400;animation:drawPath 5.5s ease-out 1s forwards;opacity:.7;pointer-events:none}
+  
+  /* Segmentos coloreados por fase alquímica */
+  .phase-nigredo{stroke:var(--nigredo)}
+  .phase-albedo{stroke:#b8a878}
+  .phase-rubedo{stroke:var(--rubedo)}
+
+  @keyframes pulseSelf{0%,100%{opacity:.9}50%{opacity:1}}
+  .self-glow{transform-origin:center;transform-box:fill-box;animation:pulseSelf 4s ease-in-out infinite}
+
+  /* Marcadores de fase */
+  .phase-marker{cursor:pointer;transition:transform .3s}
+  .phase-marker:hover{transform:scale(1.15);transform-box:fill-box;transform-origin:center}
+  .phase-marker text{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-anchor:middle;pointer-events:none}
+
+  .legend-strip{margin-top:24px;display:flex;gap:22px;flex-wrap:wrap;justify-content:center;font-family:'EB Garamond',serif;font-size:.85rem;color:var(--shadow-br)}
+  .legend-strip span{display:inline-flex;align-items:center;gap:8px}
+  .legend-strip .dot{width:11px;height:11px;border-radius:50%;display:inline-block;border:1px solid var(--ink)}
+
+  /* ───── Panel de detalle ───── */
+  .detail{margin-top:54px;border-top:1px solid var(--line);padding-top:36px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:start;min-height:160px;transition:opacity .4s}
+  @media (max-width:680px){.detail{grid-template-columns:1fr}}
+  .detail-glyph{width:120px;height:120px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:2.6rem;color:var(--gold);background:rgba(255,250,240,.5);position:relative}
+  .detail-glyph::before,.detail-glyph::after{content:'';position:absolute;width:8px;height:8px;border:1px solid var(--gold)}
+  .detail-glyph::before{top:-5px;left:-5px;border-right:none;border-bottom:none}
+  .detail-glyph::after{bottom:-5px;right:-5px;border-left:none;border-top:none}
+  .detail-content h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:2rem;margin-bottom:6px;color:var(--ink)}
+  .detail-content .latin{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.3em;color:var(--rust);text-transform:uppercase;margin-bottom:18px}
+  .detail-content p{font-size:1.02rem;margin-bottom:12px;max-width:65ch}
+  .detail-content .quote{border-left:2px solid var(--gold);padding:6px 16px;margin-top:18px;font-style:italic;color:var(--shadow-br);font-size:.95rem}
+  .detail-content .quote cite{display:block;margin-top:6px;font-size:.78rem;font-style:normal;letter-spacing:.1em;color:var(--rust)}
+  .detail.fade{opacity:.2}
+
+  /* ───── II. Tipos psicológicos ───── */
+  .types-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  @media (max-width:880px){.types-wrap{grid-template-columns:1fr}}
+  .types-svg{width:100%;max-width:520px;aspect-ratio:1/1;margin:0 auto;display:block;filter:drop-shadow(0 2px 2px rgba(26,22,18,.08))}
+  .type-sector{cursor:pointer;transition:opacity .3s}
+  .type-sector:hover{opacity:.7}
+  .type-sector.active path{filter:drop-shadow(0 0 8px rgba(184,137,58,.6))}
+  .type-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;fill:var(--ink);text-anchor:middle;text-transform:uppercase;pointer-events:none}
+  .axis-label{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;fill:var(--shadow-br);text-anchor:middle}
+
+  #type-panel{padding:28px;border:1px solid var(--line-soft);background:rgba(255,250,240,.4);min-height:280px}
+  #type-panel .latin{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.3em;color:var(--rust);text-transform:uppercase;margin-bottom:10px}
+  #type-panel h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:1.7rem;margin-bottom:6px}
+  #type-panel .meta{font-size:.85rem;color:var(--shadow-br);margin-bottom:14px;border-bottom:1px solid var(--line-soft);padding-bottom:10px}
+  #type-panel .meta b{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:var(--rust);text-transform:uppercase}
+  #type-panel p{font-size:.98rem;margin-bottom:10px}
+  #type-panel .figures{font-style:italic;font-size:.88rem;color:var(--shadow-br);margin-top:14px;padding-top:10px;border-top:1px solid var(--line-soft)}
+
+  /* ───── III. Arquetipos extendidos ───── */
+  .arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .arch{text-align:center;padding:18px 12px;border:1px solid var(--line-soft);background:rgba(255,250,240,.3);transition:all .3s;cursor:pointer}
+  .arch:hover{border-color:var(--gold);background:rgba(255,250,240,.65);transform:translateY(-2px)}
+  .arch.active{border-color:var(--gold);background:rgba(255,250,240,.8);box-shadow:0 4px 12px rgba(184,137,58,.15)}
+  .arch .sym{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);margin-bottom:6px;display:block}
+  .arch .name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--ink)}
+  .arch .desc{font-size:.78rem;color:var(--shadow-br);margin-top:4px;line-height:1.4}
+
+  #arch-detail{margin-top:32px;padding:36px;border:1px solid var(--gold);background:rgba(255,250,240,.5);position:relative;display:grid;grid-template-columns:auto 1fr;gap:32px;transition:opacity .4s}
+  @media (max-width:680px){#arch-detail{grid-template-columns:1fr;padding:24px}}
+  #arch-detail.fade{opacity:.2}
+  #arch-detail .ag-glyph{width:100px;height:100px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:2.4rem;color:var(--gold);background:var(--parchment)}
+  #arch-detail h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:1.8rem;margin-bottom:4px}
+  #arch-detail .latin{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.3em;color:var(--rust);text-transform:uppercase;margin-bottom:14px}
+  #arch-detail p{font-size:1rem;margin-bottom:10px;max-width:65ch}
+  #arch-detail .manifest{margin-top:14px;font-size:.88rem;color:var(--shadow-br)}
+  #arch-detail .manifest b{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:var(--rust);text-transform:uppercase;display:block;margin-bottom:4px}
+
+  /* ───── IV. Fases alquímicas ───── */
+  .phases-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px}
+  @media (max-width:880px){.phases-wrap{grid-template-columns:1fr}}
+  .phase-card{
+    padding:32px 24px;border:1px solid var(--line-soft);
+    position:relative;overflow:hidden;
+    transition:all .3s;
+  }
+  .phase-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(26,22,18,.1)}
+  .phase-card.nigredo{background:linear-gradient(135deg,#2a221c 0%,#1a1612 100%);color:#d4c8a8}
+  .phase-card.nigredo h4{color:var(--gold-soft)}
+  .phase-card.albedo{background:linear-gradient(135deg,#f0e6cc 0%,#e0d4b0 100%);color:var(--ink)}
+  .phase-card.albedo h4{color:var(--rust)}
+  .phase-card.rubedo{background:linear-gradient(135deg,#a04528 0%,#8b3a1f 100%);color:#f4dcc6}
+  .phase-card.rubedo h4{color:#f4d97e}
+  .phase-card .roman-num{
+    position:absolute;top:14px;right:18px;
+    font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.3em;opacity:.6;
+  }
+  .phase-card h4{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:1.5rem;margin-bottom:4px;
+  }
+  .phase-card .sym{font-family:'Cinzel',serif;font-size:2rem;margin-bottom:14px;display:block;opacity:.8}
+  .phase-card .latin{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;margin-bottom:14px;opacity:.75}
+  .phase-card p{font-size:.92rem;line-height:1.55;margin-bottom:10px}
+  .phase-card .task{
+    margin-top:14px;padding-top:12px;border-top:1px solid currentColor;
+    font-style:italic;font-size:.85rem;opacity:.85;
+  }
+
+  /* ───── Footer ───── */
+  footer.colophon{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);text-align:center;font-family:'EB Garamond',serif;font-style:italic;font-size:.78rem;color:var(--shadow-br);line-height:1.7}
+  footer.colophon .berne{font-style:normal;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;color:var(--rust);margin-top:10px;display:block}
+
+  .reveal{opacity:0;transform:translateY(12px);animation:rise .9s ease-out forwards}
+  .reveal-1{animation-delay:.1s}.reveal-2{animation-delay:.35s}.reveal-3{animation-delay:.6s}.reveal-4{animation-delay:.85s}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <header class="reveal reveal-1">
+    <div class="eyebrow">Carl Gustav Jung · 1875 – 1961</div>
+    <h1>
+      Mysterium Animæ
+      <span class="roman">EL MODELO DE LA PSIQUE</span>
+    </h1>
+    <p class="subtitle">Cartografía de las capas del alma, de los tipos funcionales y del proceso alquímico de individuación.</p>
+  </header>
+
+  <nav class="toc reveal reveal-2">
+    <a href="#mandala">I · Mandala</a>
+    <a href="#tipos">II · Tipos Psicológicos</a>
+    <a href="#arquetipos">III · Arquetipos</a>
+    <a href="#fases">IV · Opus Alchymicum</a>
+  </nav>
+
+  <!-- ═══════════════════════ I. MANDALA ═══════════════════════ -->
+  <section id="mandala">
+    <div class="section-head">
+      <div class="num">I · CAPAS DE LA PSIQUE</div>
+      <h2>El Mandala del Alma</h2>
+      <p>Tres anillos concéntricos: conciencia, inconsciente personal e inconsciente colectivo. En el centro, el <em>Self</em>.</p>
+    </div>
+
+    <div class="layout">
+      <aside class="col-left reveal reveal-2">
+        <div class="note">
+          <span class="glyph">☉</span>
+          <h3>Conciencia</h3>
+          <p>El círculo más externo. La porción del psiquismo <em>iluminada</em>: lo que el sujeto sabe que sabe. Su centro es el <em>Ego</em>.</p>
+          <p>La <em>Persona</em> es su superficie social: las máscaras adaptativas con que se transita la <em>polis</em>.</p>
+        </div>
+        <div class="note">
+          <span class="glyph">☾</span>
+          <h3>Inconsciente Personal</h3>
+          <p>Capa intermedia. Contiene lo reprimido, lo olvidado y lo no actualizado de la biografía singular. Aquí habita la <em>Sombra</em>.</p>
+          <p>También <em>Ánima</em> y <em>Ánimus</em>: la contraparte interior del sexo opuesto.</p>
+        </div>
+      </aside>
+
+      <div class="col-center mandala-wrap reveal reveal-3">
+        <svg class="mandala" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gradConsc" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ebe0c8" stop-opacity="0"/>
+              <stop offset="85%" stop-color="#ebe0c8" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#2f4a6b" stop-opacity=".18"/>
+            </radialGradient>
+            <radialGradient id="gradPers" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ebe0c8" stop-opacity="0"/>
+              <stop offset="75%" stop-color="#ebe0c8" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#8b3a1f" stop-opacity=".15"/>
+            </radialGradient>
+            <radialGradient id="gradColl" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#4a3a6b" stop-opacity=".12"/>
+              <stop offset="100%" stop-color="#4a3a6b" stop-opacity=".22"/>
+            </radialGradient>
+            <radialGradient id="gradSelf" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#f4d97e"/>
+              <stop offset="60%" stop-color="#d4a857"/>
+              <stop offset="100%" stop-color="#b8893a"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="250" cy="250" r="240" fill="url(#gradConsc)"/>
+          <circle cx="250" cy="250" r="240" class="ring-stroke"/>
+          <circle cx="250" cy="250" r="170" fill="url(#gradPers)"/>
+          <circle cx="250" cy="250" r="170" class="ring-stroke"/>
+          <circle cx="250" cy="250" r="95"  fill="url(#gradColl)"/>
+          <circle cx="250" cy="250" r="95"  class="ring-stroke"/>
+
+          <circle cx="250" cy="250" r="205" class="ring-stroke-soft"/>
+          <circle cx="250" cy="250" r="130" class="ring-stroke-soft"/>
+          <circle cx="250" cy="250" r="60"  class="ring-stroke-soft"/>
+
+          <line x1="250" y1="10"  x2="250" y2="490" stroke="#1a1612" stroke-width=".3" opacity=".3"/>
+          <line x1="10"  y1="250" x2="490" y2="250" stroke="#1a1612" stroke-width=".3" opacity=".3"/>
+
+          <path id="ringOuter" d="M 30,250 A 220,220 0 0 1 470,250" fill="none"/>
+          <text class="ring-label"><textPath href="#ringOuter" startOffset="50%" text-anchor="middle">· conscientia · lumen diurnum ·</textPath></text>
+          <path id="ringMid" d="M 90,250 A 160,160 0 0 1 410,250" fill="none"/>
+          <text class="ring-label" style="font-size:11px"><textPath href="#ringMid" startOffset="50%" text-anchor="middle">· inconscius personalis ·</textPath></text>
+          <path id="ringInner" d="M 165,250 A 85,85 0 0 1 335,250" fill="none"/>
+          <text class="ring-label" style="font-size:10px;fill:#4a3a6b"><textPath href="#ringInner" startOffset="50%" text-anchor="middle">· inconscius collectivus ·</textPath></text>
+
+          <!-- Trazado de individuación dividido en 3 fases -->
+          <!-- NIGREDO: descenso a la Sombra -->
+          <path class="path-individuation phase-nigredo"
+                d="M 250,40 C 320,80 360,140 360,200 C 360,260 280,310 200,310 C 150,310 130,290 130,290"
+                stroke-dasharray="600" stroke-dashoffset="600"
+                style="animation:drawPath 2s ease-out 1s forwards"/>
+          <!-- ALBEDO: integración / contraparte interior -->
+          <path class="path-individuation phase-albedo"
+                d="M 130,290 C 110,260 130,210 180,200 C 240,190 310,230 320,290 C 325,330 350,335 360,335"
+                stroke-dasharray="500" stroke-dashoffset="500"
+                style="animation:drawPath 2s ease-out 3s forwards"/>
+          <!-- RUBEDO: conjunción con el Self -->
+          <path class="path-individuation phase-rubedo"
+                d="M 360,335 C 330,330 290,310 270,290 C 250,270 245,260 250,250"
+                stroke-dasharray="200" stroke-dashoffset="200"
+                style="animation:drawPath 1.5s ease-out 5s forwards"/>
+
+          <!-- Marcadores de fase sobre el trazado -->
+          <g class="phase-marker" data-phase="nigredo">
+            <circle cx="360" cy="200" r="9" fill="#1a1612" stroke="#b8893a" stroke-width="1.5"/>
+            <text x="360" y="203" fill="#d4a857">I</text>
+          </g>
+          <g class="phase-marker" data-phase="albedo">
+            <circle cx="180" cy="200" r="9" fill="#e8dcc0" stroke="#b8893a" stroke-width="1.5"/>
+            <text x="180" y="203" fill="#1a1612">II</text>
+          </g>
+          <g class="phase-marker" data-phase="rubedo">
+            <circle cx="320" cy="290" r="9" fill="#8b3a1f" stroke="#d4a857" stroke-width="1.5"/>
+            <text x="320" y="293" fill="#f4d97e">III</text>
+          </g>
+
+          <!-- Nodos psíquicos -->
+          <g class="node-group" data-node="persona">
+            <circle class="node-circle" cx="250" cy="40" r="22" fill="#ebe0c8" stroke="#2f4a6b" stroke-width="1.5"/>
+            <text class="node-label" x="250" y="44">Persona</text>
+          </g>
+          <g class="node-group" data-node="ego">
+            <circle class="node-circle" cx="370" cy="170" r="22" fill="#ebe0c8" stroke="#2f4a6b" stroke-width="1.5"/>
+            <text class="node-label" x="370" y="174">Ego</text>
+          </g>
+          <g class="node-group" data-node="shadow">
+            <circle class="node-circle" cx="130" cy="320" r="22" fill="#ebe0c8" stroke="#8b3a1f" stroke-width="1.5"/>
+            <text class="node-label" x="130" y="324">Sombra</text>
+          </g>
+          <g class="node-group" data-node="anima">
+            <circle class="node-circle" cx="370" cy="340" r="22" fill="#ebe0c8" stroke="#8b3a1f" stroke-width="1.5"/>
+            <text class="node-label" x="370" y="338" style="font-size:8px">Ánima</text>
+            <text class="node-label" x="370" y="348" style="font-size:8px">Ánimus</text>
+          </g>
+          <g class="node-group self-glow" data-node="self">
+            <circle class="node-circle" cx="250" cy="250" r="38" fill="url(#gradSelf)" stroke="#8b3a1f" stroke-width="1.5"/>
+            <text class="node-label" x="250" y="247" style="fill:#1a1612;font-size:11px;letter-spacing:.2em">SELF</text>
+            <text x="250" y="262" style="fill:#1a1612;font-size:8px;font-family:'EB Garamond';font-style:italic;text-anchor:middle">sí mismo</text>
+          </g>
+
+          <text x="20" y="30"  style="font-family:'Cinzel';font-size:10px;fill:#b8893a;letter-spacing:.1em">☉</text>
+          <text x="475" y="30" style="font-family:'Cinzel';font-size:10px;fill:#b8893a;letter-spacing:.1em">☾</text>
+          <text x="20" y="485" style="font-family:'Cinzel';font-size:10px;fill:#b8893a;letter-spacing:.1em">☿</text>
+          <text x="475" y="485" style="font-family:'Cinzel';font-size:10px;fill:#b8893a;letter-spacing:.1em">♁</text>
+        </svg>
+
+        <div class="legend-strip">
+          <span><i class="dot" style="background:#2f4a6b;opacity:.4"></i> Conciencia</span>
+          <span><i class="dot" style="background:#8b3a1f;opacity:.5"></i> Inc. Personal</span>
+          <span><i class="dot" style="background:#4a3a6b;opacity:.6"></i> Inc. Colectivo</span>
+          <span><i class="dot" style="background:#d4a857"></i> Self</span>
+          <span><i class="dot" style="background:#1a1612"></i> I · Nigredo</span>
+          <span><i class="dot" style="background:#e8dcc0"></i> II · Albedo</span>
+          <span><i class="dot" style="background:#8b3a1f"></i> III · Rubedo</span>
+        </div>
+      </div>
+
+      <aside class="col-right reveal reveal-4">
+        <div class="note">
+          <span class="glyph">✦</span>
+          <h3>Inconsciente Colectivo</h3>
+          <p>Estrato más profundo, <em>transpersonal</em>. No es adquirido por la biografía: es <em>herencia psíquica</em> de la especie. Contiene los <em>arquetipos</em>, formas a priori que estructuran la experiencia.</p>
+        </div>
+        <div class="note">
+          <span class="glyph">◉</span>
+          <h3>El Self</h3>
+          <p>Centro y totalidad. No coincide con el Ego: lo abarca. Es a la vez <em>meta</em> y <em>origen</em>; el principio organizador innato hacia el cual se orienta el proceso de individuación.</p>
+        </div>
+      </aside>
+    </div>
+
+    <section class="detail" id="detail">
+      <div class="detail-glyph" id="detail-glyph">◉</div>
+      <div class="detail-content" id="detail-content">
+        <h2>Toca un símbolo del mandala</h2>
+        <div class="latin">selige et contempla</div>
+        <p>Cada nodo del diagrama abre un campo de la psique. Los marcadores <strong>I · II · III</strong> sobre el trazado corresponden a las fases del <em>opus alchymicum</em> (véase sección IV).</p>
+        <p>Pulsa los círculos blancos sobre el mandala para explorar; pulsa los marcadores numerados para conocer cada fase alquímica.</p>
+      </div>
+    </section>
+  </section>
+
+  <!-- ═══════════════════════ II. TIPOS PSICOLÓGICOS ═══════════════════════ -->
+  <section id="tipos">
+    <div class="section-head">
+      <div class="num">II · TYPOLOGIA PSYCHOLOGICA</div>
+      <h2>Los Ocho Tipos Psicológicos</h2>
+      <p>Dos actitudes (introversión / extroversión) cruzadas con cuatro funciones (pensamiento / sentimiento / sensación / intuición). <em>Psychologische Typen</em>, 1921.</p>
+    </div>
+
+    <div class="types-wrap">
+      <div>
+        <svg class="types-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gradTypes" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ebe0c8"/>
+              <stop offset="100%" stop-color="#d9cbac"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Anillo exterior: Extroversión -->
+          <circle cx="250" cy="250" r="220" fill="url(#gradTypes)" stroke="#1a1612" stroke-width="1"/>
+          <!-- Anillo interior: Introversión -->
+          <circle cx="250" cy="250" r="130" fill="rgba(74,58,107,.15)" stroke="#1a1612" stroke-width="1"/>
+          <!-- Centro -->
+          <circle cx="250" cy="250" r="35" fill="rgba(184,137,58,.25)" stroke="#b8893a" stroke-width="1"/>
+
+          <!-- Cruz de funciones -->
+          <line x1="250" y1="30" x2="250" y2="470" stroke="#1a1612" stroke-width=".8" opacity=".6"/>
+          <line x1="30" y1="250" x2="470" y2="250" stroke="#1a1612" stroke-width=".8" opacity=".6"/>
+
+          <!-- Ejes diagonales decorativos -->
+          <line x1="100" y1="100" x2="400" y2="400" stroke="#1a1612" stroke-width=".3" opacity=".3" stroke-dasharray="3 4"/>
+          <line x1="400" y1="100" x2="100" y2="400" stroke="#1a1612" stroke-width=".3" opacity=".3" stroke-dasharray="3 4"/>
+
+          <!-- Sectores: 8 cuadrantes -->
+          <!-- Pensamiento extrovertido -->
+          <g class="type-sector" data-type="te">
+            <path d="M 250,30 A 220,220 0 0 1 470,250 L 380,250 A 130,130 0 0 0 250,120 Z"
+                  fill="rgba(47,74,107,.18)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="365" y="155" transform="rotate(45 365 155)">Pensam. Ext.</text>
+          </g>
+          <!-- Sentimiento extrovertido -->
+          <g class="type-sector" data-type="fe">
+            <path d="M 470,250 A 220,220 0 0 1 250,470 L 250,380 A 130,130 0 0 0 380,250 Z"
+                  fill="rgba(139,58,31,.18)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="365" y="350" transform="rotate(-45 365 350)">Sentim. Ext.</text>
+          </g>
+          <!-- Sensación extrovertida -->
+          <g class="type-sector" data-type="se">
+            <path d="M 250,470 A 220,220 0 0 1 30,250 L 120,250 A 130,130 0 0 0 250,380 Z"
+                  fill="rgba(90,107,58,.18)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="135" y="350" transform="rotate(45 135 350)">Sensac. Ext.</text>
+          </g>
+          <!-- Intuición extrovertida -->
+          <g class="type-sector" data-type="ne">
+            <path d="M 30,250 A 220,220 0 0 1 250,30 L 250,120 A 130,130 0 0 0 120,250 Z"
+                  fill="rgba(184,137,58,.18)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="135" y="155" transform="rotate(-45 135 155)">Intuic. Ext.</text>
+          </g>
+          <!-- Pensamiento introvertido -->
+          <g class="type-sector" data-type="ti">
+            <path d="M 250,120 A 130,130 0 0 1 380,250 L 285,250 A 35,35 0 0 0 250,215 Z"
+                  fill="rgba(47,74,107,.32)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="305" y="215" transform="rotate(45 305 215)" style="font-size:8px">Pens. Int.</text>
+          </g>
+          <!-- Sentimiento introvertido -->
+          <g class="type-sector" data-type="fi">
+            <path d="M 380,250 A 130,130 0 0 1 250,380 L 250,285 A 35,35 0 0 0 285,250 Z"
+                  fill="rgba(139,58,31,.32)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="305" y="290" transform="rotate(-45 305 290)" style="font-size:8px">Sent. Int.</text>
+          </g>
+          <!-- Sensación introvertida -->
+          <g class="type-sector" data-type="si">
+            <path d="M 250,380 A 130,130 0 0 1 120,250 L 215,250 A 35,35 0 0 0 250,285 Z"
+                  fill="rgba(90,107,58,.32)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="195" y="290" transform="rotate(45 195 290)" style="font-size:8px">Sens. Int.</text>
+          </g>
+          <!-- Intuición introvertida -->
+          <g class="type-sector" data-type="ni">
+            <path d="M 120,250 A 130,130 0 0 1 250,120 L 250,215 A 35,35 0 0 0 215,250 Z"
+                  fill="rgba(184,137,58,.32)" stroke="#1a1612" stroke-width=".5"/>
+            <text class="type-label" x="195" y="215" transform="rotate(-45 195 215)" style="font-size:8px">Intuic. Int.</text>
+          </g>
+
+          <!-- Etiquetas cardinales -->
+          <text class="axis-label" x="250" y="22" style="font-family:'Cinzel';letter-spacing:.25em;font-size:10px">PENSAMIENTO</text>
+          <text class="axis-label" x="250" y="490" style="font-family:'Cinzel';letter-spacing:.25em;font-size:10px">SENSACIÓN</text>
+          <text class="axis-label" x="25" y="254" style="font-family:'Cinzel';letter-spacing:.25em;font-size:10px;text-anchor:start" transform="rotate(-90 25 254)">INTUICIÓN</text>
+          <text class="axis-label" x="475" y="254" style="font-family:'Cinzel';letter-spacing:.25em;font-size:10px;text-anchor:end" transform="rotate(90 475 254)">SENTIMIENTO</text>
+
+          <!-- Etiquetas de actitud -->
+          <text class="axis-label" x="250" y="68" style="font-size:9px">extraversio</text>
+          <text class="axis-label" x="250" y="170" style="font-size:9px">introversio</text>
+
+          <!-- Centro -->
+          <text x="250" y="253" style="font-family:'Cinzel';font-size:10px;fill:#1a1612;letter-spacing:.15em;text-anchor:middle">EGO</text>
+        </svg>
+      </div>
+
+      <div id="type-panel">
+        <div class="latin">selige typum</div>
+        <h3>La Brújula Funcional</h3>
+        <p>Cada individuo desarrolla una <em>función dominante</em> (la más diferenciada) y una <em>función inferior</em> (su opuesta, sumergida en el inconsciente). La individuación pasa por integrar la función inferior.</p>
+        <p style="margin-top:14px;font-size:.9rem;color:var(--shadow-br)">
+          <b style="font-family:'Cinzel';font-size:.65rem;letter-spacing:.2em;color:var(--rust)">EJES:</b><br>
+          · Pensamiento ↔ Sentimiento (funciones racionales)<br>
+          · Sensación ↔ Intuición (funciones irracionales)
+        </p>
+        <p class="figures">Pulsa un sector para conocer cada tipo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ III. ARQUETIPOS ═══════════════════════ -->
+  <section id="arquetipos">
+    <div class="section-head">
+      <div class="num">III · ARCHETYPI</div>
+      <h2>Los Arquetipos del Inconsciente Colectivo</h2>
+      <p>Formas a priori universales. No son imágenes heredadas, sino <em>disposiciones</em> a producir imágenes.</p>
+    </div>
+
+    <div class="arch-grid">
+      <div class="arch" data-arch="self"><span class="sym">♁</span><div class="name">El Self</div><div class="desc">Totalidad, mandala</div></div>
+      <div class="arch" data-arch="shadow"><span class="sym">◐</span><div class="name">La Sombra</div><div class="desc">Lo reprimido, lo otro</div></div>
+      <div class="arch" data-arch="anima"><span class="sym">⚭</span><div class="name">Ánima / Ánimus</div><div class="desc">Contraparte interior</div></div>
+      <div class="arch" data-arch="wise"><span class="sym">☉</span><div class="name">El Viejo Sabio</div><div class="desc">Sentido, espíritu</div></div>
+      <div class="arch" data-arch="mother"><span class="sym">☾</span><div class="name">La Gran Madre</div><div class="desc">Origen, nutrición</div></div>
+      <div class="arch" data-arch="child"><span class="sym">✦</span><div class="name">El Niño Divino</div><div class="desc">Comienzo, futuro</div></div>
+      <div class="arch" data-arch="trickster"><span class="sym">☿</span><div class="name">El Trickster</div><div class="desc">Astucia, transgresión</div></div>
+      <div class="arch" data-arch="hero"><span class="sym">⚔</span><div class="name">El Héroe</div><div class="desc">Travesía, prueba</div></div>
+      <div class="arch" data-arch="maiden"><span class="sym">✿</span><div class="name">La Doncella · Kore</div><div class="desc">Inocencia, despertar</div></div>
+      <div class="arch" data-arch="rebirth"><span class="sym">⊕</span><div class="name">El Renacimiento</div><div class="desc">Muerte y resurrección</div></div>
+    </div>
+
+    <div id="arch-detail">
+      <div class="ag-glyph" id="ag-glyph">♁</div>
+      <div>
+        <h3 id="ag-name">El Self</h3>
+        <div class="latin" id="ag-latin">selbst · totalitas psychica</div>
+        <div id="ag-body">
+          <p>Pulsa cualquier arquetipo para conocer su descripción, manifestaciones y formas culturales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ IV. OPUS ALCHYMICUM ═══════════════════════ -->
+  <section id="fases">
+    <div class="section-head">
+      <div class="num">IV · OPUS ALCHYMICUM</div>
+      <h2>Las Tres Fases de la Individuación</h2>
+      <p>Jung identificó en la <em>Opus Magnum</em> alquímica un símbolo del proceso psíquico de transformación. Tres fases, tres colores, tres tareas.</p>
+    </div>
+
+    <div class="phases-wrap">
+      <div class="phase-card nigredo">
+        <span class="roman-num">I</span>
+        <span class="sym">☿</span>
+        <h4>Nigredo</h4>
+        <div class="latin">opus ad nigrum · putrefactio</div>
+        <p>La <strong>obra en negro</strong>. Disolución de la Persona. Encuentro con la Sombra: aquello que el Ego ha negado emerge y debe ser reconocido como propio.</p>
+        <p>Fase del descenso, del duelo, de la <em>melancolía creadora</em>. La <em>prima materia</em> se descompone para poder transformarse.</p>
+        <div class="task"><b>Tarea:</b> integrar la Sombra. Asumir lo que se proyecta en el otro.</div>
+      </div>
+
+      <div class="phase-card albedo">
+        <span class="roman-num">II</span>
+        <span class="sym">☽</span>
+        <h4>Albedo</h4>
+        <div class="latin">opus ad album · ablutio</div>
+        <p>La <strong>obra en blanco</strong>. Purificación. Encuentro con el Ánima / Ánimus: la contraparte interior del sexo opuesto se hace consciente y se diferencia del Ego.</p>
+        <p>Fase lunar, contemplativa. Aparición del <em>lapis albus</em>. La psique recupera una claridad nueva, ganada por la travesía nocturna.</p>
+        <div class="task"><b>Tarea:</b> diferenciar e integrar el Ánima/Ánimus. Cesar las proyecciones amorosas.</div>
+      </div>
+
+      <div class="phase-card rubedo">
+        <span class="roman-num">III</span>
+        <span class="sym">☉</span>
+        <h4>Rubedo</h4>
+        <div class="latin">opus ad rubeum · coniunctio</div>
+        <p>La <strong>obra en rojo</strong>. <em>Coniunctio oppositorum</em>: unión de los opuestos. El Ego reconoce al Self como verdadero centro y se descentra voluntariamente.</p>
+        <p>Fase solar. Aparición del <em>lapis philosophorum</em>, la piedra filosofal — símbolo del Self realizado. Plenitud, no perfección.</p>
+        <div class="task"><b>Tarea:</b> habitar la totalidad. Ego al servicio del Self.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    Composición tipográfica en Cormorant Garamond, EB Garamond y Cinzel.<br>
+    Cartografía conceptual basada en <em>Mysterium Coniunctionis</em> (1955–56), <em>Aion</em> (1951), <em>Psychology and Alchemy</em> (1944) y <em>Psychologische Typen</em> (1921).
+    <span class="berne">© <span id="year"></span> LUIS CARTES HENRÍQUEZ · CREACIÓN ORIGINAL PROTEGIDA — CONVENIO DE BERNA / OMPI · PROHIBIDA SU REPRODUCCIÓN, ADAPTACIÓN O USO EN ENTRENAMIENTO DE IA SIN AUTORIZACIÓN EXPRESA</span>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ═══ I. NODOS PSÍQUICOS ═══ */
+  const psyData = {
+    persona: { glyph:'☉', title:'La Persona', latin:'persona · larva theatralis',
+      paragraphs:[
+        'Del latín <em>persona</em>: la máscara del actor en el teatro romano. Designa la interfaz adaptativa con que el individuo se presenta ante el colectivo.',
+        'No es falsa en sí misma — es funcional y necesaria. El conflicto surge cuando el Ego se <em>identifica</em> con ella y olvida que es solo una superficie.'],
+      quote:{ text:'"La Persona es un complicado sistema de relaciones entre la conciencia individual y la sociedad."', cite:'C. G. Jung — Dos escritos sobre psicología analítica, 1928' }},
+    ego: { glyph:'✧', title:'El Ego', latin:'ego · centrum conscientiae',
+      paragraphs:[
+        'Centro del campo consciente. El "yo" diurno que dice "yo pienso, yo decido".',
+        'Para Jung, el Ego no es la totalidad de la psique — es solo su porción iluminada. Su tarea madura es reconocerse como satélite del Self.'],
+      quote:{ text:'"El Ego es como un corcho que flota sobre el mar del inconsciente."', cite:'C. G. Jung — Conferencias de Tavistock, 1935' }},
+    shadow: { glyph:'◐', title:'La Sombra', latin:'umbra · alter ego',
+      paragraphs:[
+        'Conjunto de rasgos, impulsos y deseos que el Ego ha rechazado por incompatibles con su autoimagen. Habita el inconsciente personal y se proyecta sobre los demás.',
+        'Integrar la Sombra es la primera gran tarea del proceso de individuación: reconocer como propio aquello que se odia en el otro.'],
+      quote:{ text:'"Uno no se ilumina imaginando figuras de luz, sino haciendo consciente la oscuridad."', cite:'C. G. Jung — Mysterium Coniunctionis, 1955' }},
+    anima: { glyph:'⚭', title:'Ánima / Ánimus', latin:'anima · animus · syzygia',
+      paragraphs:[
+        'La <em>Ánima</em> es la imagen interior de lo femenino en el varón; el <em>Ánimus</em>, la imagen interior de lo masculino en la mujer.',
+        'Se proyectan sobre la pareja y son responsables del enamoramiento súbito y la fascinación. Integrarlas conduce al <em>coniunctio</em>.'],
+      quote:{ text:'"Cada hombre lleva eternamente en sí la imagen de la mujer; no la de una mujer determinada, sino la de toda mujer."', cite:'C. G. Jung — Arquetipos e inconsciente colectivo, 1934' }},
+    self: { glyph:'◉', title:'El Sí Mismo', latin:'selbst · totalitas psychica',
+      paragraphs:[
+        'Centro y totalidad de la psique. Comprende lo consciente y lo inconsciente. No es algo que se construya — es la disposición innata a la totalidad.',
+        'Su símbolo es el <em>mandala</em>: cuadratura del círculo. El proceso de individuación es el camino de des-identificación del Ego y reconocimiento del Self como verdadero centro.'],
+      quote:{ text:'"El Self no es solo el centro, sino también la circunferencia que abarca conciencia e inconsciente."', cite:'C. G. Jung — Aion, 1951' }}
+  };
+
+  /* ═══ Fases alquímicas como datos del mismo panel ═══ */
+  const phaseData = {
+    nigredo: { glyph:'☿', title:'Nigredo — Obra en Negro', latin:'opus ad nigrum · putrefactio',
+      paragraphs:[
+        'Primera fase del <em>opus alchymicum</em>. Disolución de la Persona y encuentro con la Sombra.',
+        'La <em>prima materia</em> debe descomponerse antes de poder transformarse. Es la noche oscura del alma, el descenso necesario.'],
+      quote:{ text:'"In sterquiliniis invenitur" — en el estercolero se encuentra (la piedra).', cite:'Axioma alquímico citado por Jung — Psychology and Alchemy, 1944' }},
+    albedo: { glyph:'☽', title:'Albedo — Obra en Blanco', latin:'opus ad album · ablutio',
+      paragraphs:[
+        'Segunda fase. Purificación tras la disolución. Encuentro con el Ánima / Ánimus y diferenciación de la contraparte interior.',
+        'Aparece el <em>lapis albus</em>. La psique recupera claridad — una claridad lunar, ganada por la travesía nocturna.'],
+      quote:{ text:'"El alba blanquece, y el alma se lava en el rocío celeste."', cite:'Adaptado del Rosarium Philosophorum, 1550' }},
+    rubedo: { glyph:'☉', title:'Rubedo — Obra en Rojo', latin:'opus ad rubeum · coniunctio',
+      paragraphs:[
+        'Tercera fase. <em>Coniunctio oppositorum</em>: unión de los opuestos en la totalidad del Self.',
+        'El Ego reconoce que no es el centro, sino satélite del Self. Aparece el <em>lapis philosophorum</em> — símbolo de la totalidad realizada.'],
+      quote:{ text:'"Solve et coagula — disuelve y coagula. El opus es circular: termina donde comenzó, pero transformado."', cite:'Hermes Trismegisto · interpretado por Jung' }}
+  };
+
+  const detailEl = document.getElementById('detail');
+  const glyphEl = document.getElementById('detail-glyph');
+  const contentEl = document.getElementById('detail-content');
+
+  function renderDetail(d){
+    detailEl.classList.add('fade');
+    setTimeout(()=>{
+      glyphEl.textContent = d.glyph;
+      contentEl.innerHTML = `
+        <h2>${d.title}</h2>
+        <div class="latin">${d.latin}</div>
+        ${d.paragraphs.map(p=>`<p>${p}</p>`).join('')}
+        <div class="quote">${d.quote.text}<cite>— ${d.quote.cite}</cite></div>`;
+      detailEl.classList.remove('fade');
+    }, 200);
+  }
+
+  document.querySelectorAll('.node-group').forEach(node=>{
+    node.addEventListener('click', ()=>{
+      document.querySelectorAll('.node-group, .phase-marker').forEach(n=>n.classList.remove('active'));
+      node.classList.add('active');
+      renderDetail(psyData[node.dataset.node]);
+      detailEl.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
+
+  document.querySelectorAll('.phase-marker').forEach(m=>{
+    m.addEventListener('click', ()=>{
+      document.querySelectorAll('.node-group, .phase-marker').forEach(n=>n.classList.remove('active'));
+      m.classList.add('active');
+      renderDetail(phaseData[m.dataset.phase]);
+      detailEl.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
+
+  setTimeout(()=>{
+    document.querySelector('[data-node="self"]').classList.add('active');
+    renderDetail(psyData.self);
+  }, 7000);
+
+  /* ═══ II. TIPOS PSICOLÓGICOS ═══ */
+  const typeData = {
+    te: { name:'Pensamiento Extrovertido', latin:'cogitatio extraversa', attitude:'Extrovertido', func:'Pensamiento (racional)',
+      desc:'Organiza el mundo exterior según principios lógicos objetivos. Construye sistemas, instituciones, leyes. Su criterio es lo verificable, lo demostrable.',
+      shadow:'Tiende a desatender el sentimiento; el matiz emocional puede aparecerle como ruido.',
+      figures:'Charles Darwin, Karl Marx, Marie Curie.' },
+    ti: { name:'Pensamiento Introvertido', latin:'cogitatio introversa', attitude:'Introvertido', func:'Pensamiento (racional)',
+      desc:'Busca la coherencia interna de las ideas, no su utilidad práctica. Cuestiona axiomas, explora estructuras profundas. La verdad como arquitectura.',
+      shadow:'Puede aislarse en sus modelos y descuidar la realidad social y afectiva.',
+      figures:'Immanuel Kant, Friedrich Nietzsche, Albert Einstein.' },
+    fe: { name:'Sentimiento Extrovertido', latin:'sentimentum extraversum', attitude:'Extrovertido', func:'Sentimiento (racional)',
+      desc:'Valora según los códigos compartidos de su comunidad. Crea armonía, tacto social, vínculos. Sabe lo que se debe sentir en cada contexto.',
+      shadow:'El pensamiento crítico puede surgir como rebrote agresivo desde lo inconsciente.',
+      figures:'Mahatma Gandhi, Eleanor Roosevelt.' },
+    fi: { name:'Sentimiento Introvertido', latin:'sentimentum introversum', attitude:'Introvertido', func:'Sentimiento (racional)',
+      desc:'Valora desde una jerarquía íntima e inarticulada. Hondo, leal, selectivo. "Aguas profundas corren en silencio".',
+      shadow:'Puede parecer frío o indescifrable; le cuesta exteriorizar lo que más le importa.',
+      figures:'Søren Kierkegaard, Emily Dickinson, Vincent van Gogh.' },
+    se: { name:'Sensación Extrovertida', latin:'sensus extraversus', attitude:'Extrovertido', func:'Sensación (irracional)',
+      desc:'Percepción aguda del mundo concreto y presente. Realismo gozoso, sensual, pragmático. El aquí y el ahora.',
+      shadow:'La intuición se desliza como obsesión, presagio o paranoia.',
+      figures:'Auguste Rodin, Pablo Picasso (parcial).' },
+    si: { name:'Sensación Introvertida', latin:'sensus introversus', attitude:'Introvertido', func:'Sensación (irracional)',
+      desc:'Recibe la realidad y la archiva subjetivamente. Memoria precisa del detalle, fidelidad a la tradición, sentido de continuidad.',
+      shadow:'La intuición irrumpe como visiones inquietantes del porvenir.',
+      figures:'Marcel Proust, J. S. Bach.' },
+    ne: { name:'Intuición Extrovertida', latin:'intuitio extraversa', attitude:'Extrovertido', func:'Intuición (irracional)',
+      desc:'Olfatea posibilidades latentes en personas, situaciones, mercados. Visionario, oportuno, fértil en ideas. Inicia más de lo que culmina.',
+      shadow:'Le persigue la sensación: detalles materiales que descuida vuelven como exigencias compulsivas.',
+      figures:'Walt Disney, Elon Musk, Leonardo da Vinci.' },
+    ni: { name:'Intuición Introvertida', latin:'intuitio introversa', attitude:'Introvertido', func:'Intuición (irracional)',
+      desc:'Percibe imágenes del inconsciente colectivo. Profeta, místico, artista visionario. Capta tendencias antes de que se manifiesten.',
+      shadow:'La sensación retorna como sintomatología corporal o fijaciones materiales.',
+      figures:'C. G. Jung mismo, William Blake, Friedrich Hölderlin.' }
+  };
+
+  const typePanel = document.getElementById('type-panel');
+  function renderType(key){
+    const t = typeData[key];
+    typePanel.innerHTML = `
+      <div class="latin">${t.latin}</div>
+      <h3>${t.name}</h3>
+      <div class="meta"><b>Actitud:</b> ${t.attitude} · <b>Función:</b> ${t.func}</div>
+      <p>${t.desc}</p>
+      <p><b style="font-family:'Cinzel';font-size:.65rem;letter-spacing:.2em;color:var(--rust)">FUNCIÓN INFERIOR:</b><br>${t.shadow}</p>
+      <p class="figures">Ejemplos: ${t.figures}</p>`;
+  }
+  document.querySelectorAll('.type-sector').forEach(s=>{
+    s.addEventListener('click', ()=>{
+      document.querySelectorAll('.type-sector').forEach(x=>x.classList.remove('active'));
+      s.classList.add('active');
+      renderType(s.dataset.type);
+    });
+  });
+
+  /* ═══ III. ARQUETIPOS ═══ */
+  const archData = {
+    self:{ glyph:'♁', name:'El Self · Sí Mismo', latin:'selbst · totalitas',
+      body:`<p>Centro y totalidad de la psique. Arquetipo de los arquetipos. No coincide con el Ego: lo trasciende y lo abarca.</p>
+            <p>Se manifiesta en imágenes de unidad y cuadratura.</p>`,
+      manifest:['Mandala', 'Cristo, Buda, el Anthropos', 'La piedra filosofal', 'Cuaternidad, círculo cuadrado'] },
+    shadow:{ glyph:'◐', name:'La Sombra', latin:'umbra',
+      body:`<p>Aquello que el Ego ha rechazado como incompatible con su autoimagen. No es solo lo "malo": también contiene potencias vitales no asumidas.</p>
+            <p>Se proyecta sobre el otro como rechazo o fascinación.</p>`,
+      manifest:['Mr. Hyde', 'El doble (Doppelgänger)', 'Mefistófeles', 'Caín', 'El gemelo oscuro'] },
+    anima:{ glyph:'⚭', name:'Ánima / Ánimus', latin:'anima · animus',
+      body:`<p>Contraparte interior del sexo opuesto. Mediadora con el inconsciente. Tiene cuatro grados de desarrollo: Eva, Helena, María, Sophia (Ánima); y Hércules, Alejandro, Hermes, Hermes-Sophia (Ánimus).</p>`,
+      manifest:['Beatrice (Dante)', 'Lilith', 'Sophia gnóstica', 'La Musa', 'El amado/a fantaseado'] },
+    wise:{ glyph:'☉', name:'El Viejo Sabio', latin:'senex · magus',
+      body:`<p>Personificación del <em>logos</em> y del espíritu. Aparece en sueños cuando se requiere sentido, decisión o guía. Versión positiva: el maestro; versión negativa: el mago manipulador.</p>`,
+      manifest:['Merlín', 'Gandalf', 'Sócrates', 'Lao Tse', 'El anciano del río'] },
+    mother:{ glyph:'☾', name:'La Gran Madre', latin:'magna mater',
+      body:`<p>Arquetipo de la nutrición, el origen y también la devoración. Tiene polaridad: madre buena que alimenta y madre terrible que devora.</p>`,
+      manifest:['Deméter', 'Isis', 'Kali', 'La Virgen María', 'Pachamama', 'La bruja del cuento'] },
+    child:{ glyph:'✦', name:'El Niño Divino · Puer Æternus', latin:'puer aeternus',
+      body:`<p>Símbolo del comienzo, del potencial y del futuro. Vulnerable y prodigioso. En sombra: el adulto que nunca crece (Peter Pan), que rehúye el compromiso.</p>`,
+      manifest:['Hermes niño', 'El niño Jesús', 'Krishna niño', 'El pequeño príncipe'] },
+    trickster:{ glyph:'☿', name:'El Trickster · Embaucador', latin:'mercurius',
+      body:`<p>Astucia, transgresión, ambigüedad. Es el agente del cambio cuando lo establecido se anquilosa. Bufón sagrado, transformador, mensajero.</p>`,
+      manifest:['Hermes/Mercurio', 'Loki', 'Coyote (nativo americano)', 'El bufón de la corte', 'Anansi'] },
+    hero:{ glyph:'⚔', name:'El Héroe', latin:'heros',
+      body:`<p>Quien acepta la travesía. Su monomito: separación, iniciación, retorno. Encarna la lucha del Ego por diferenciarse de la madre inconsciente.</p>`,
+      manifest:['Ulises', 'Perseo', 'Arjuna', 'Sigfrido', 'Frodo'] },
+    maiden:{ glyph:'✿', name:'La Doncella · Kore', latin:'kore · puella',
+      body:`<p>Inocencia luminosa que será arrebatada y transformada. El rapto de Perséfone es su mito. Compañera de la Gran Madre, paso de la juventud al saber.</p>`,
+      manifest:['Perséfone/Kore', 'Eurídice', 'Caperucita', 'Las hijas de Deméter'] },
+    rebirth:{ glyph:'⊕', name:'El Renacimiento', latin:'rebirth · transformatio',
+      body:`<p>Arquetipo de la muerte y resurrección. Estructura de toda transformación psíquica auténtica. Lo viejo debe morir para que lo nuevo nazca.</p>`,
+      manifest:['Osiris', 'Cristo resucitado', 'El Fénix', 'Dioniso desmembrado', 'La crisálida'] }
+  };
+  const ad = document.getElementById('arch-detail');
+  function renderArch(key){
+    const a = archData[key]; if(!a) return;
+    ad.classList.add('fade');
+    setTimeout(()=>{
+      document.getElementById('ag-glyph').textContent = a.glyph;
+      document.getElementById('ag-name').textContent = a.name;
+      document.getElementById('ag-latin').textContent = a.latin;
+      document.getElementById('ag-body').innerHTML = `${a.body}
+        <div class="manifest"><b>Manifestaciones:</b> ${a.manifest.join(' · ')}</div>`;
+      ad.classList.remove('fade');
+    }, 200);
+  }
+  document.querySelectorAll('.arch').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      document.querySelectorAll('.arch').forEach(x=>x.classList.remove('active'));
+      a.classList.add('active');
+      renderArch(a.dataset.arch);
+    });
+  });
+  // Estado inicial del arquetipo
+  renderArch('self');
+  document.querySelector('[data-arch="self"]').classList.add('active');
+</script>
+
+</body>
+</html>
