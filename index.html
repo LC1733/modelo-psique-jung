@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Mysterium Animæ — Modelo de la Psique · C. G. Jung</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -200,6 +200,117 @@
   .reveal{opacity:0;transform:translateY(12px);animation:rise .9s ease-out forwards}
   .reveal-1{animation-delay:.1s}.reveal-2{animation-delay:.35s}.reveal-3{animation-delay:.6s}.reveal-4{animation-delay:.85s}
   @keyframes rise{to{opacity:1;transform:translateY(0)}}
+
+  /* ═══════════════════════════════════════════════════
+     RESPONSIVE MÓVIL — ≤ 680px (teléfonos)
+     ═══════════════════════════════════════════════════ */
+  @media (max-width:680px){
+    .frame{padding:28px 16px 40px}
+
+    /* Cabecera */
+    header{padding-bottom:20px;margin-bottom:28px}
+    header::before{font-size:1.1rem;top:4px}
+    .eyebrow{font-size:.6rem;letter-spacing:.35em;margin-top:20px;margin-bottom:10px}
+    h1{font-size:1.8rem}
+    h1 .roman{font-size:.42em;letter-spacing:.14em;margin-top:8px}
+    .subtitle{font-size:.9rem;margin-top:12px;padding:0 8px}
+
+    /* Navegación */
+    .toc{gap:6px;margin-bottom:32px;padding:0 4px}
+    .toc a{font-size:.58rem;letter-spacing:.15em;padding:6px 10px}
+
+    /* Encabezados de sección */
+    .section-head{margin:48px 0 24px}
+    .section-head::before,.section-head::after{display:none}
+    .section-head .num{font-size:.6rem;letter-spacing:.3em}
+    .section-head h2{font-size:1.5rem}
+    .section-head p{font-size:.85rem;padding:0 8px}
+
+    /* ─── I. MANDALA ─── */
+    .layout{grid-template-columns:1fr;gap:16px}
+    /* En móvil: mandala arriba, notas debajo */
+    .col-center{order:-1}
+    .mandala{max-width:100%}
+    .note{padding:14px 16px;font-size:.88rem}
+    .note h3{font-size:.62rem;letter-spacing:.22em}
+    .note .glyph{width:26px;height:26px;font-size:.85rem;top:-10px;right:-8px}
+    .col-left .note + .note, .col-right .note + .note{margin-top:14px}
+
+    /* SVG mandala — agrandar touch targets */
+    .node-group .node-circle{r:26}
+    .node-label{font-size:8px !important;letter-spacing:.12em !important}
+
+    /* Leyenda */
+    .legend-strip{gap:10px;font-size:.75rem;margin-top:16px}
+    .legend-strip .dot{width:9px;height:9px}
+
+    /* Panel de detalle */
+    .detail{grid-template-columns:1fr;gap:16px;margin-top:32px;padding-top:24px}
+    .detail-glyph{width:80px;height:80px;font-size:2rem;margin:0 auto}
+    .detail-content h2{font-size:1.5rem;text-align:center}
+    .detail-content .latin{font-size:.6rem;text-align:center}
+    .detail-content p{font-size:.92rem}
+    .detail-content .quote{font-size:.85rem;padding:5px 12px}
+    .detail-content .quote cite{font-size:.7rem}
+
+    /* ─── II. TIPOS PSICOLÓGICOS ─── */
+    .types-wrap{grid-template-columns:1fr;gap:24px}
+    .types-svg{max-width:100%;touch-action:manipulation}
+    /* Agrandar labels en brújula */
+    .type-label{font-size:7px !important;letter-spacing:.1em !important}
+    .axis-label{font-size:9px !important}
+
+    #type-panel{padding:18px;min-height:auto}
+    #type-panel h3{font-size:1.3rem}
+    #type-panel p{font-size:.88rem}
+    #type-panel .meta{font-size:.8rem}
+    #type-panel .figures{font-size:.82rem}
+
+    /* ─── III. ARQUETIPOS ─── */
+    .arch-grid{grid-template-columns:repeat(2, 1fr);gap:10px}
+    .arch{padding:14px 8px}
+    .arch .sym{font-size:1.3rem;margin-bottom:4px}
+    .arch .name{font-size:.9rem}
+    .arch .desc{font-size:.7rem}
+
+    #arch-detail{grid-template-columns:1fr;gap:16px;padding:18px}
+    #arch-detail .ag-glyph{width:70px;height:70px;font-size:1.8rem;margin:0 auto}
+    #arch-detail h3{font-size:1.4rem;text-align:center}
+    #arch-detail .latin{font-size:.6rem;text-align:center}
+    #arch-detail p{font-size:.9rem}
+    #arch-detail .manifest{font-size:.82rem}
+
+    /* ─── IV. FASES ALQUÍMICAS ─── */
+    .phases-wrap{grid-template-columns:1fr;gap:16px;margin-top:20px}
+    .phase-card{padding:24px 18px}
+    .phase-card .sym{font-size:1.6rem;margin-bottom:10px}
+    .phase-card h4{font-size:1.3rem}
+    .phase-card .latin{font-size:.58rem;letter-spacing:.22em}
+    .phase-card p{font-size:.88rem}
+    .phase-card .task{font-size:.82rem}
+
+    /* Footer */
+    footer.colophon{margin-top:48px;font-size:.72rem;padding:0 8px}
+    footer.colophon .berne{font-size:.52rem;letter-spacing:.15em;line-height:1.8}
+  }
+
+  /* ═══ Tablets pequeñas — 681-880px ═══ */
+  @media (min-width:681px) and (max-width:880px){
+    .frame{padding:40px 28px 50px}
+    .layout{grid-template-columns:1fr;gap:20px}
+    .col-center{order:-1}
+    .mandala{max-width:480px;margin:0 auto}
+    .arch-grid{grid-template-columns:repeat(3, 1fr)}
+  }
+
+  /* ═══ Mejoras táctiles para todos los dispositivos touch ═══ */
+  @media (hover:none) and (pointer:coarse){
+    .node-group, .phase-marker, .type-sector, .arch{
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+    .toc a{min-height:44px;display:inline-flex;align-items:center}
+  }
 </style>
 </head>
 <body>
